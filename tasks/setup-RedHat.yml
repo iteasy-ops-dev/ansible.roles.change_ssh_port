@@ -1,0 +1,37 @@
+- name: 기존 설정파일 백업 만들기
+  ansible.builtin.copy:
+    src: /etc/ssh/sshd_config
+    dest: /etc/ssh/sshd_config.{{ backup_date }}.bak
+    backup: true
+    mode: '0644'
+
+- name: 포트 변경하기
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?Port '
+    line: 'Port {{ new_port }}'
+    state: present
+  notify: Restart sshd
+
+- name: SSH 설정파일 테스트
+  ansible.builtin.command: sshd -t
+  register: sshd_check
+  failed_when: sshd_check.rc != 0
+
+- name: 방화벽 세팅 (firewalld)
+  ansible.posix.firewalld:
+    port: "{{ new_port }}/tcp"
+    permanent: true
+    state: enabled
+  notify: Update Firewall
+
+- name: SELinux 임시 정지
+  ansible.posix.selinux:
+    state: disabled
+  when: ansible_facts['selinux']['status'] != 'disabled'  # Check if SELinux is not already disabled
+
+- name: SELinux 재시작
+  ansible.posix.selinux:
+    state: enforcing
+    policy: targeted
+  when: ansible_facts['selinux']['status'] == 'disabled'  # Check if SELinux was previously disabled

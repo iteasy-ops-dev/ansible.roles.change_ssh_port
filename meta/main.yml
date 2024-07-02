@@ -1,0 +1,16 @@
+galaxy_info:
+  role_name: iteasy_ansible_roles_change_ssh_port
+  author: qksgnsw
+  description: change ssh port.
+  company: iteasy
+  license: "license (BSD)"
+
+  min_ansible_version: "2.1"
+
+  galaxy_tags:
+    - ssh
+    - port
+    - linux
+    - update
+
+dependencies: []

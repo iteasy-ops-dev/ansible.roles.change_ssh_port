@@ -1,0 +1,4 @@
+---
+# defaults file for iteasy.ansible.roles.change_ssh_port
+new_port: "22"
+backup_date: "{{ ansible_date_time.date }}"
