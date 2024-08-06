@@ -18,20 +18,20 @@
   register: sshd_check
   failed_when: sshd_check.rc != 0
 
-- name: 방화벽 세팅 (firewalld)
-  ansible.posix.firewalld:
-    port: "{{ new_port }}/tcp"
-    permanent: true
-    state: enabled
-  notify: Update Firewall
+# - name: 방화벽 세팅 (firewalld)
+#   ansible.posix.firewalld:
+#     port: "{{ new_port }}/tcp"
+#     permanent: true
+#     state: enabled
+#   notify: Update Firewall
 
-- name: SELinux 임시 정지
-  ansible.posix.selinux:
-    state: disabled
-  when: ansible_facts['selinux']['status'] != 'disabled'  # Check if SELinux is not already disabled
+# - name: SELinux 임시 정지
+#   ansible.posix.selinux:
+#     state: disabled
+#   when: ansible_facts['selinux']['status'] != 'disabled'  # Check if SELinux is not already disabled
 
-- name: SELinux 재시작
-  ansible.posix.selinux:
-    state: enforcing
-    policy: targeted
-  when: ansible_facts['selinux']['status'] == 'disabled'  # Check if SELinux was previously disabled
+# - name: SELinux 재시작
+#   ansible.posix.selinux:
+#     state: enforcing
+#     policy: targeted
+#   when: ansible_facts['selinux']['status'] == 'disabled'  # Check if SELinux was previously disabled
